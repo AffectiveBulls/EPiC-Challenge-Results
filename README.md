@@ -64,3 +64,6 @@ Scenario-3, from `Code` folder run
 Scenario-4, from `Code` folder run
 
 `python Testing_Scenario_3_4.py`
+
+
+Submitted test predictions can be found in `./results/scenario_X/` organized as per the requirements of the Challenge. If testing is run, these predictions would be overwritten.
