@@ -1,4 +1,10 @@
 # -*- coding: utf-8 -*-
+"""
+Created on Wed Apr 12 00:27:39 2023
+
+@author: ntweat
+"""
+
 
 import numpy as np
 import os
@@ -24,8 +30,8 @@ import pdb
 # scenario-2: across individuals
 # this code does training only
 
-# where to put training data--it should follow the challenge format. example: ./data/scenario-2/fold-0/train/annotations and ./data/scenario-2/fold-0/train/physiology for training data
-root_dir = "./data/scenario_2"
+# where to put training data--it should follow the challenge format. example: REPO_ROOT/data/scenario-2/fold-0/train/annotations and REPO_ROOT/data/scenario-2/fold-0/train/physiology for training data
+root_dir = "../data/scenario_2"
 
 # features given in the challenge
 all_features = ['ecg','bvp','gsr','rsp','skt','emg_zygo','emg_coru','emg_trap']
@@ -36,7 +42,7 @@ phys_features = ['ecg','bvp','gsr','rsp','skt']
 # motion features in the challenge
 emg_features = ['emg_zygo','emg_coru','emg_trap']
 
-# subset of features to use, can be 'all_features', 'phys_features' or 'emg_features'. This controls what features are used for training and testing.
+# subset of features to use, can be all_features, phys_features or emg_features. This controls what features are used for training and testing.
 FEATURES_TO_USE = all_features
 # given every 50 samples is annotated. this is used to create individual samples to train the model
 ANNOTATION_FREQ = 50
@@ -158,15 +164,15 @@ def test_fold(fid, log_file):
   # use this to generate test predictions that follow the challenge submission format
   features = FEATURES_TO_USE
   folder = os.path.join(root_dir, 'fold_{0}'.format(fid), 'test', 'physiology')
-  save_dir = 'results/{0}/scenario_2/fold_{1}/test/annotations'.format(features, fid)
+  save_dir = '../results/scenario_2/fold_{0}/test/annotations'.format(fid)
   os.makedirs(save_dir, exist_ok=True)
   out = list()
   annotations_fold_path = folder.replace('physiology', 'annotations')
   # using fold-0 model for test predictions. since we were unable to finish the models for other folds, we use fold-0 models for other folds as well.
   valence_model = create_model()
-  valence_model.load_weights(os.path.join('./results/scenario-2/fold_0', 'best_model_scenario-2_valence_{0}.h5'.format(features)))
+  valence_model.load_weights(os.path.join('../checkpoints/scenario-2/fold_0', 'best_model_scenario-2_valence.h5'.format(features)))
   arousal_model = create_model()
-  arousal_model.load_weights(os.path.join('./results/scenario-2/fold_0', 'best_model_scenario-2_arousal_{0}.h5'.format(features)))
+  arousal_model.load_weights(os.path.join('../checkpoints/scenario-2/fold_0', 'best_model_scenario-2_arousal.h5'.format(features)))
  
   for file in os.listdir(folder):
     subject = os.path.basename(file).split('_')[1]
@@ -200,7 +206,7 @@ if __name__ == '__main__':
     for fold in range(5):
         # training setup
         # where to save training logs and models
-        LOG_DIR = './results/scenario-2/fold_{}'.format(fold)
+        LOG_DIR = '../checkpoints/scenario-2/fold_{}'.format(fold)
         os.makedirs(LOG_DIR, exist_ok=True)
         train_data, valid_data = get_fold_data(fid=fold, partition='train')
         
@@ -215,6 +221,5 @@ if __name__ == '__main__':
         valid_valence = valid_data[['valence']]
         valid_arousal = valid_data[['arousal']]
         
-        model_suffix = FEATURES_TO_USE.split('_')[0]
-        iteration(nepochs=NEPOCHS, train_x=train_x, train_y=train_valence, valid_x=valid_x, valid_y=valid_valence, log_file=LOG_DIR, modal='scenario-2_valence_{0}'.format(model_suffix))
-        iteration(nepochs=NEPOCHS, train_x=train_x, train_y=train_arousal, valid_x=valid_x, valid_y=valid_arousal, log_file=LOG_DIR, modal='scenario-2_arousal_{0}'.format(model_suffix))
+        iteration(nepochs=NEPOCHS, train_x=train_x, train_y=train_valence, valid_x=valid_x, valid_y=valid_valence, log_file=LOG_DIR, modal='scenario-2_valence')
+        iteration(nepochs=NEPOCHS, train_x=train_x, train_y=train_arousal, valid_x=valid_x, valid_y=valid_arousal, log_file=LOG_DIR, modal='scenario-2_arousal')
