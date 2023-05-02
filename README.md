@@ -1,6 +1,7 @@
 # EPiC-Challenge-Results
 
-## Team: Saurabh Hinduja, Maneesh Bilalpur, Liza Jivnani, Shaun Canavan
+## Team: Saurabh Hinduja<sup>:one:</sup>, Maneesh Bilalpur<sup>:one:</sup>, Liza Jivnani<sup>:two:</sup>, Shaun Canavan<sup>:two:</sup>
+### <sup>:one:</sup> University of Pittsburgh, <sup>:two:</sup> University of South Florida
 
 
 # Method:
